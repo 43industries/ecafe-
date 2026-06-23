@@ -1,0 +1,97 @@
+.dashboard-wrapper { display: flex; min-height: 100vh; }
+
+.sidebar {
+    width: 260px;
+    background: var(--primary);
+    color: #fff;
+    flex-shrink: 0;
+    transition: transform var(--transition);
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 1000;
+    overflow-y: auto;
+}
+.sidebar-brand {
+    padding: 1.5rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.sidebar-brand .accent { color: var(--accent); }
+.sidebar-nav { padding: 1rem 0; }
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    transition: all var(--transition);
+    border-left: 3px solid transparent;
+}
+.sidebar-link:hover, .sidebar-link.active {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    border-left-color: var(--accent);
+}
+.sidebar-link i { width: 20px; text-align: center; }
+
+.dashboard-main {
+    flex: 1;
+    margin-left: 260px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.topbar {
+    background: var(--glass);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+.topbar-title { font-weight: 600; font-size: 1.1rem; margin: 0; }
+
+.dashboard-content { padding: 1.5rem; flex: 1; }
+
+.stat-card {
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+}
+.stat-card .stat-value { font-size: 2rem; font-weight: 700; color: var(--primary); }
+.stat-card .stat-label { color: var(--text-muted); font-size: 0.875rem; }
+.stat-card.accent .stat-value { color: var(--accent); }
+
+.sidebar-toggle { display: none; background: none; border: none; font-size: 1.25rem; color: var(--text); }
+
+@media (max-width: 991px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .dashboard-main { margin-left: 0; }
+    .sidebar-toggle { display: block; }
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 999;
+    }
+    .sidebar-overlay.active { display: block; }
+}
+
+/* Print receipt */
+@media print {
+    .sidebar, .topbar, .no-print { display: none !important; }
+    .dashboard-main { margin-left: 0 !important; }
+}

@@ -1,0 +1,9 @@
+/vendor/
+.env
+composer.phar
+/storage/logs/*.log/storage/receipts/*
+!/storage/receipts/.gitkeep
+/storage/uploads/*
+!/storage/uploads/.gitkeep
+/public/assets/img/qr/*
+!/public/assets/img/qr/.gitkeep
