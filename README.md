@@ -135,6 +135,98 @@ ecafe/
 └── bootstrap.php    # App bootstrap
 ```
 
+## Deploy to Railway
+
+The repo includes config for [Railway](https://railway.app) deployment with Railpack (FrankenPHP), a MySQL plugin, and persistent volumes for storage.
+
+### 1. Create the Railway project
+
+1. Go to [railway.app](https://railway.app) → **New Project** → **Deploy from GitHub repo** → select this repo
+2. Add **MySQL**: **New** → **Database** → **MySQL**
+3. Generate a public domain: web service → **Settings** → **Networking** → **Generate Domain**
+
+### 2. Configure environment variables
+
+On the **web service** Variables tab, add:
+
+| Variable | Value |
+|----------|-------|
+| `RAILPACK_PHP_ROOT_DIR` | `public` |
+| `RAILPACK_PHP_EXTENSIONS` | `pdo_mysql,gd,zip,mbstring,dom` |
+| `DB_HOST` | `${{MySQL.MYSQLHOST}}` |
+| `DB_PORT` | `${{MySQL.MYSQLPORT}}` |
+| `DB_NAME` | `${{MySQL.MYSQLDATABASE}}` |
+| `DB_USER` | `${{MySQL.MYSQLUSER}}` |
+| `DB_PASS` | `${{MySQL.MYSQLPASSWORD}}` |
+| `APP_URL` | `https://${{RAILWAY_PUBLIC_DOMAIN}}` |
+| `APP_ENV` | `production` |
+| `APP_DEBUG` | `false` |
+| `APP_TIMEZONE` | `Africa/Nairobi` |
+| `MPESA_CALLBACK_URL` | `https://${{RAILWAY_PUBLIC_DOMAIN}}/api/mpesa/callback` |
+
+Add M-Pesa and mail credentials when ready (same keys as `.env.example`).
+
+`APP_URL` must **not** include `/public` — Railway serves from the `public` directory directly.
+
+### 3. Volumes
+
+[`railway.toml`](railway.toml) mounts two volumes automatically:
+
+- `ecafe-storage` → `/app/storage` (logs, receipts, uploads)
+- `ecafe-qr` → `/app/public/assets/img/qr` (order QR codes)
+
+If volumes are not created on first deploy, add them manually under **Settings** → **Volumes**.
+
+### 4. Initialize the database (one-time)
+
+After the first successful deploy, import schema and seed data. **Run this only once** — the file contains `DROP TABLE` statements.
+
+```bash
+npm install -g @railway/cli
+railway login
+railway link
+railway connect mysql < database/railway-init.sql
+```
+
+Or use the helper script:
+
+```powershell
+# Windows
+.\scripts\init-railway-db.ps1
+```
+
+```bash
+# macOS / Linux
+./scripts/init-railway-db.sh
+```
+
+Or use the MySQL TCP credentials from the Railway MySQL service **Connect** tab:
+
+```bash
+mysql -h <host> -P <port> -u <user> -p<pass> <database> < database/railway-init.sql
+```
+
+### 5. Verify deployment
+
+- Home page loads at `https://<your-domain>/`
+- Login: `STU001` / `Password123!`
+- Place a test order and confirm a QR code is generated
+- Redeploy and confirm QR codes and receipts persist (volumes)
+- Update Daraja callback URL to `https://<your-domain>/api/mpesa/callback`
+
+### Railway config files
+
+| File | Purpose |
+|------|---------|
+| `railway.toml` | Build/deploy settings and volume mounts |
+| `Caddyfile` | FrankenPHP URL rewriting (front controller) |
+| `start-container.sh` | Ensures writable dirs, then starts FrankenPHP |
+| `scripts/ensure-storage.sh` | Creates storage directories on volume mount |
+| `database/railway-init.sql` | Schema + seed for Railway MySQL (no `CREATE DATABASE`) |
+| `scripts/init-railway-db.ps1` | One-time database import (Windows) |
+| `scripts/init-railway-db.sh` | One-time database import (macOS/Linux) |
+| `scripts/verify-railway-deploy.ps1` | Pre-deploy artifact and syntax check |
+
 ## API Endpoints
 
 | Endpoint | Method | Description |

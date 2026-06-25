@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-return [
+$config = [
     'host' => env('DB_HOST', '127.0.0.1'),
     'port' => env('DB_PORT', '3306'),
     'database' => env('DB_NAME', 'ecafe_db'),
@@ -15,3 +15,27 @@ return [
         PDO::ATTR_EMULATE_PREPARES => false,
     ],
 ];
+
+$url = env('MYSQL_URL') ?: env('DATABASE_URL');
+if ($url) {
+    $parts = parse_url($url);
+    if ($parts !== false) {
+        if (!empty($parts['host'])) {
+            $config['host'] = $parts['host'];
+        }
+        if (!empty($parts['port'])) {
+            $config['port'] = (string) $parts['port'];
+        }
+        if (!empty($parts['user'])) {
+            $config['username'] = urldecode($parts['user']);
+        }
+        if (isset($parts['pass'])) {
+            $config['password'] = urldecode($parts['pass']);
+        }
+        if (!empty($parts['path'])) {
+            $config['database'] = ltrim($parts['path'], '/');
+        }
+    }
+}
+
+return $config;

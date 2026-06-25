@@ -1,0 +1,15 @@
+[build]
+builder = "RAILPACK"
+
+[deploy]
+healthcheckPath = "/"
+healthcheckTimeout = 120
+restartPolicyType = "ON_FAILURE"
+
+[[deploy.volumes]]
+mountPath = "/app/storage"
+name = "ecafe-storage"
+
+[[deploy.volumes]]
+mountPath = "/app/public/assets/img/qr"
+name = "ecafe-qr"
