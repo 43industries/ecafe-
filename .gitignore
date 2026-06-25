@@ -1,10 +1,11 @@
 /vendor/
 .env
 composer.phar
+.zip
+desktop.ini
 /storage/logs/*.log/storage/receipts/*
 !/storage/receipts/.gitkeep
 /storage/uploads/*
 !/storage/uploads/.gitkeep
 /public/assets/img/qr/*
 !/public/assets/img/qr/.gitkeep
-/netlify-proxy/public/_redirects
