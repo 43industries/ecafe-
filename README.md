@@ -227,6 +227,18 @@ mysql -h <host> -P <port> -u <user> -p<pass> <database> < database/railway-init.
 | `scripts/init-railway-db.sh` | One-time database import (macOS/Linux) |
 | `scripts/verify-railway-deploy.ps1` | Pre-deploy artifact and syntax check |
 
+## Netlify (hybrid proxy)
+
+This PHP app cannot run natively on Netlify. Use Netlify as a **reverse proxy** in front of Railway instead.
+
+See **[docs/NETLIFY.md](docs/NETLIFY.md)** for the full hybrid setup guide.
+
+```powershell
+.\scripts\setup-netlify-hybrid.ps1 `
+  -RailwayBackendUrl "https://your-app.up.railway.app" `
+  -NetlifyDomain "https://your-site.netlify.app"
+```
+
 ## API Endpoints
 
 | Endpoint | Method | Description |

@@ -9,7 +9,10 @@ $required = @(
     "start-container.sh",
     "scripts/ensure-storage.sh",
     "scripts/init-railway-db.ps1",
-    "database/railway-init.sql"
+    "database/railway-init.sql",
+    "netlify-proxy/netlify.toml",
+    "netlify-proxy/scripts/generate-redirects.js",
+    "docs/NETLIFY.md"
 )
 
 $failed = $false

@@ -7,3 +7,4 @@ composer.phar
 !/storage/uploads/.gitkeep
 /public/assets/img/qr/*
 !/public/assets/img/qr/.gitkeep
+/netlify-proxy/public/_redirects
